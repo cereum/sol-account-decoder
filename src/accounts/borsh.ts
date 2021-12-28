@@ -1,38 +1,127 @@
-import { PublicKey } from "@solana/web3.js";
-import { BinaryReader, BinaryWriter } from "borsh";
-import basex from "base-x";
-export type StringPublicKey = string;
+import { serialize, BinaryReader, Schema, BorshError } from "borsh";
 
-export const extendBorsh = () => {
-  (BinaryReader.prototype as any).readPubkey = function () {
-    const reader = this as unknown as BinaryReader;
-    const array = reader.readFixedArray(32);
-    return new PublicKey(array);
-  };
+// Class wrapping a plain object
+export abstract class Assignable {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(properties: { [key: string]: any }) {
+    Object.keys(properties).forEach((key: string) => {
+      (this as any)[key] = properties[key];
+    });
+  }
 
-  (BinaryWriter.prototype as any).writePubkey = function (value: PublicKey) {
-    const writer = this as unknown as BinaryWriter;
-    writer.writeFixedArray(value.toBuffer());
-  };
+  encode(): Buffer {
+    return Buffer.from(serialize(SCHEMA, this));
+  }
 
-  (BinaryReader.prototype as any).readPubkeyAsString = function () {
-    const reader = this as unknown as BinaryReader;
-    const array = reader.readFixedArray(32);
-    return basex(
-      "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
-    ).encode(array) as StringPublicKey;
-  };
+  static decode<T extends Assignable>(data: Buffer): T {
+    return deserializeExtraBytes(SCHEMA, this, data);
+  }
+}
 
-  (BinaryWriter.prototype as any).writePubkeyAsString = function (
-    value: StringPublicKey
-  ) {
-    const writer = this as unknown as BinaryWriter;
-    writer.writeFixedArray(
-      basex(
-        "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
-      ).decode(value)
-    );
-  };
-};
+// Class representing a Rust-compatible enum, since enums are only strings or
+// numbers in pure JS
+export abstract class Enum extends Assignable {
+  enum: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(properties: Record<string, any>) {
+    super(properties);
+    if (Object.keys(properties).length !== 1) {
+      throw new Error("Enum can only take single value");
+    }
+    this.enum = "";
+    Object.keys(properties).forEach((key) => {
+      this.enum = key;
+    });
+  }
+}
 
-extendBorsh();
+export const SCHEMA: Schema = new Map();
+
+// TODO PR for leaving extra bytes, a lot of code copied from
+// https://github.com/near/borsh-js/blob/master/borsh-ts/index.ts
+
+function capitalizeFirstLetter(string: string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function deserializeField(
+  schema: Schema,
+  fieldName: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fieldType: any,
+  reader: BinaryReader
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): any {
+  try {
+    if (typeof fieldType === "string") {
+      return (reader as any)[`read${capitalizeFirstLetter(fieldType)}`]();
+    }
+
+    if (fieldType instanceof Array) {
+      if (typeof fieldType[0] === "number") {
+        return reader.readFixedArray(fieldType[0]);
+      }
+
+      return reader.readArray(() =>
+        deserializeField(schema, fieldName, fieldType[0], reader)
+      );
+    }
+
+    return deserializeStruct(schema, fieldType, reader);
+  } catch (error) {
+    if (error instanceof BorshError) {
+      error.addToFieldPath(fieldName);
+    }
+    throw error;
+  }
+}
+
+function deserializeStruct<T>(
+  schema: Schema,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  classType: any,
+  reader: BinaryReader
+): T {
+  const structSchema = schema.get(classType);
+  if (!structSchema) {
+    throw new BorshError(`Class ${classType.name} is missing in schema`);
+  }
+
+  if (structSchema.kind === "struct") {
+    const result = {};
+    for (const [fieldName, fieldType] of schema.get(classType).fields) {
+      (result as any)[fieldName] = deserializeField(
+        schema,
+        fieldName,
+        fieldType,
+        reader
+      );
+    }
+    return new classType(result);
+  }
+
+  if (structSchema.kind === "enum") {
+    const idx = reader.readU8();
+    if (idx >= structSchema.values.length) {
+      throw new BorshError(`Enum index: ${idx} is out of range`);
+    }
+    const [fieldName, fieldType] = structSchema.values[idx];
+    const fieldValue = deserializeField(schema, fieldName, fieldType, reader);
+    return new classType({ [fieldName]: fieldValue });
+  }
+
+  throw new BorshError(
+    `Unexpected schema kind: ${structSchema.kind} for ${classType.constructor.name}`
+  );
+}
+
+/// Deserializes object from bytes using schema.
+export function deserializeExtraBytes<T extends Assignable>(
+  schema: Schema,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
+  classType: any,
+  buffer: Buffer
+): T {
+  const reader = new BinaryReader(buffer);
+  return deserializeStruct(schema, classType, reader);
+}
