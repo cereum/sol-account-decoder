@@ -1,0 +1,32 @@
+.navBar{
+
+} 
+
+.navBarOptions{
+ 
+}
+
+.wallet{
+}
+
+@media (max-width: 640px) { 
+
+    .navBar{
+        justify-content: center;
+        flex-direction: column;
+    } 
+    
+    .navBarOptions{
+        justify-content: center;
+        text-align: center;
+        margin: 20px;
+        margin-bottom: 0px;
+    }
+    
+    .wallet{
+        margin-top: 20px;
+    }
+
+
+ }
+
