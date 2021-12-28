@@ -1,7 +1,8 @@
 import { useSolana } from "@saberhq/use-solana";
 import { AccountInfo, PublicKey } from "@solana/web3.js";
 import { useState } from "react";
-import { UnstyledHexEditor } from "react-hex-editor";
+
+import {HexViewer} from 'react-hexviewer-ts';
 
 type DecoderState = "input" | "parsed" | "unparsed";
 
@@ -49,9 +50,13 @@ export const Decoder = () => {
         return accountInfo ? (
           <div className="min-h-screen bg-yellow-50 py-8 px-4">
             <div className="flex flex-col items-center max-w-7xl mx-auto">
-              <p className="max-w-prose mx-auto mt-4 text-left">
+              <HexViewer
+                hex
+                rowLength={64}
+                setLength={4}
+              >
                 {accountInfo.data.toString("hex")}
-              </p>
+              </HexViewer>
             </div>
           </div>
         ) : null;

@@ -25,7 +25,7 @@
     "react-countdown": "^2.3.2",
     "react-dom": "^17.0.2",
     "react-hex-editor": "^0.3.0",
-    "react-hexviewer": "^1.0.1",
+    "react-hexviewer-ts": "^0.1.8",
     "react-loader-spinner": "^4.0.0",
     "react-loading-skeleton": "^3.0.1",
     "react-qr-code": "^2.0.2",
