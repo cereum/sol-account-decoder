@@ -12,7 +12,7 @@ ReactDOM.render(
     <WalletKitProvider
       defaultNetwork="devnet"
       app={{
-        name: "ButterSwap",
+        name: "Solana Account Decoder",
       }}
     >
       <App />
