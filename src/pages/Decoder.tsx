@@ -1,10 +1,9 @@
 import { useSolana } from "@saberhq/use-solana";
 import { AccountInfo, PublicKey } from "@solana/web3.js";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { AccountViewer } from "../components/AccountViewer";
 
 import { PublicKeyInput } from "../components/PublicKeyInput";
-import { HexViewer } from "react-hexviewer-ts";
 
 type DecoderState = "input" | "parsed" | "unparsed";
 
@@ -17,7 +16,6 @@ export const Decoder = () => {
 
   const getAccountInfo = async () => {
     try {
-
       const accountInfo = await connection.getAccountInfo(accountKey!);
       setAccountInfo(accountInfo!);
     } catch (error) {
@@ -25,34 +23,31 @@ export const Decoder = () => {
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     getAccountInfo();
-  },[decoderState]);
- 
+  }, [decoderState]);
 
   const switchState = (state: DecoderState) => {
     switch (state) {
       case "input": {
         return (
-          <div>
-            <PublicKeyInput setPublicKey={setAccountKey} setSchema={setSchema} setDecoderState={setDecoderState}></PublicKeyInput>
-          </div>
+          <PublicKeyInput
+            setPublicKey={setAccountKey}
+            setSchema={setSchema}
+            setDecoderState={setDecoderState}
+          ></PublicKeyInput>
         );
       }
       case "unparsed": {
         return accountInfo ? (
-          <>
-            <AccountViewer accountInfo={accountInfo}></AccountViewer>
-          </>
+          <AccountViewer accountInfo={accountInfo}></AccountViewer>
         ) : null;
       }
       case "parsed": {
-        return (
-          <p>Schema Parser</p>
-        );
+        return <p>Schema Parser</p>;
       }
     }
-  }
+  };
   return (
     <div className="min-h-screen bg-yellow-50 py-8 px-4">
       <div className="flex flex-col items-center max-w-7xl mx-auto">
