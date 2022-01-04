@@ -12,7 +12,7 @@ export const Decoder = () => {
   const [decoderState, setDecoderState] = useState<DecoderState>("input");
   const [accountInfo, setAccountInfo] = useState<AccountInfo<Buffer>>();
   const [accountKey, setAccountKey] = useState<PublicKey>();
-  const [schema, setSchema] = useState<{}>();
+  const [, setSchema] = useState<{}>();
 
   const getAccountInfo = async () => {
     try {
@@ -25,6 +25,7 @@ export const Decoder = () => {
 
   useEffect(() => {
     getAccountInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [decoderState]);
 
   const switchState = (state: DecoderState) => {

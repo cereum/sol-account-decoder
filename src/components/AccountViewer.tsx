@@ -1,9 +1,6 @@
-import { useState } from "react";
-import React from "react";
-
 import "react-hexviewer-ts/scss/hex-viewer.scss";
 import { HexViewer } from "react-hexviewer-ts";
-import { AccountInfo, PublicKey } from "@solana/web3.js";
+import { AccountInfo } from "@solana/web3.js";
 import { Box } from "../elements";
 
 export const AccountViewer = ({
