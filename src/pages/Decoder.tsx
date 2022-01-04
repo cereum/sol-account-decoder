@@ -1,9 +1,9 @@
 import { useSolana } from "@saberhq/use-solana";
 import { AccountInfo, PublicKey } from "@solana/web3.js";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { AccountViewer } from "../components/AccountViewer";
 
-import { HexViewer } from "react-hexviewer-ts";
-import { Button } from "../elements";
+import { PublicKeyInput } from "../components/PublicKeyInput";
 
 type DecoderState = "input" | "parsed" | "unparsed";
 
@@ -12,103 +12,40 @@ export const Decoder = () => {
   const [decoderState, setDecoderState] = useState<DecoderState>("input");
   const [accountInfo, setAccountInfo] = useState<AccountInfo<Buffer>>();
   const [accountKey, setAccountKey] = useState<PublicKey>();
-  const [schema, setSchema] = useState<{}>();
+  const [, setSchema] = useState<{}>();
 
-  const handleInput = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
+  const getAccountInfo = async () => {
     try {
-      const publicKey = new PublicKey(event.target.value);
-      console.log(publicKey);
-      const accountInfo = await connection.getAccountInfo(publicKey);
-      setAccountKey(publicKey);
+      const accountInfo = await connection.getAccountInfo(accountKey!);
       setAccountInfo(accountInfo!);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleSchemaInput = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    event.preventDefault();
-    try {
-      setSchema(JSON.parse(event.target.value));
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleSubmit = async () => {
-    if (accountInfo && schema) {
-      setDecoderState("parsed");
-    } else if (accountInfo) {
-      setDecoderState("unparsed");
-    } else {
-      return;
-    }
-  };
+  useEffect(() => {
+    getAccountInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [decoderState]);
 
   const switchState = (state: DecoderState) => {
     switch (state) {
       case "input": {
         return (
-          <div>
-            <h2
-              className="text-3xl font-extrabold text-gray-600"
-              style={{ textAlign: "center" }}
-            >
-              Enter Account Address
-            </h2>
-            <input
-              type="text"
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                handleInput(event);
-              }}
-              placeholder="Address"
-              className="px-3 py-3 my-4 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full"
-            />
-            <input
-              type="text"
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                handleSchemaInput(event);
-              }}
-              placeholder="Schema"
-              className="px-3 py-3 my-4 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full"
-            />
-            <Button className="px-3 py-3 my-4 w-full" onClick={handleSubmit}>
-              Submit
-            </Button>
-          </div>
+          <PublicKeyInput
+            setPublicKey={setAccountKey}
+            setSchema={setSchema}
+            setDecoderState={setDecoderState}
+          ></PublicKeyInput>
         );
       }
       case "unparsed": {
         return accountInfo ? (
-          <>
-            <h2
-              className="text-3xl font-extrabold text-gray-600"
-              style={{ textAlign: "center" }}
-            >
-              View hex dump for address: {accountKey!.toString()}
-            </h2>
-            <div className="my-4">
-              <HexViewer hex={true} rowLength={32} setLength={4}>
-                {accountInfo.data}
-              </HexViewer>
-            </div>
-          </>
+          <AccountViewer accountInfo={accountInfo}></AccountViewer>
         ) : null;
       }
       case "parsed": {
-        return (
-          <input
-            type="text"
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              handleInput(event);
-            }}
-            placeholder="Address"
-            className="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full"
-          />
-        );
+        return <p>Schema Parser</p>;
       }
     }
   };
