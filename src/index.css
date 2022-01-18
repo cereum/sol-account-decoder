@@ -4,8 +4,12 @@
 
 body {
   text-align: center;
-  background: #e8dcb2;
 
-  /* Dark */
-  /* background: rgb(25, 25, 25); */
+  /* Regular background: */
+  background: #e8dcb2;
+}
+
+/* Dark theme background: */
+body.dark {
+  background: rgb(25, 25, 25);
 }

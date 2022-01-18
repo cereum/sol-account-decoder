@@ -6,16 +6,25 @@ import { DecodeAnchor } from "./pages/DecodeAnchor";
 import { DecoderSelector } from "./pages";
 
 function App() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isDarkTheme, setDarkTheme] = useState(false);
 
-  const toggle = () => {
-    setIsOpen(!isOpen);
+  const toggleAppTheme = () => {
+    const isDark = !isDarkTheme;
+    setDarkTheme(isDark);
+
+    // Toggle body class for light/dark theme background styles:
+    const body = document.querySelector("body")!;
+    if (isDark) {
+      body.classList.add("dark");
+    } else {
+      body.classList.remove("dark");
+    }
   };
 
   return (
-    <div className="_bp3-dark">
+    <div className={isDarkTheme ? "bp3-dark" : ""}>
       <Router>
-        <NavBar toggle={toggle} />
+        <NavBar toggleAppTheme={toggleAppTheme} />
         <Routes>
           <Route path={"/"} element={<DecoderSelector />} />
           <Route
