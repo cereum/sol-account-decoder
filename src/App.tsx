@@ -4,7 +4,9 @@ import { useState } from "react";
 import { NavBar } from "./components";
 import { CacheSwitch } from "react-router-cache-route";
 
-import { Decoder } from "./pages";
+import { DecoderSelector } from "./pages";
+import { RawDataDisplay } from "./components/RawDataDisplay";
+import { AnchorViewer } from "./pages/AnchorViewer";
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,11 +21,9 @@ function App() {
         <CacheSwitch>
           <>
             <NavBar toggle={toggle} />
-            <Route exact path={"/decoder"}>
-              <Decoder />
-            </Route>
-            <Route exact path={"/"}>
-              <Decoder />
+            <Route path={"/"} element={<DecoderSelector/>}>
+              <Route path={"raw"} element={<RawDataDisplay/>}/>
+              <Route path={"anchor"} element={<AnchorViewer/>}/>
             </Route>
           </>
         </CacheSwitch>

@@ -1,1 +1,1 @@
-export * from "./Decoder";
+export * from "./DecoderSelector";
