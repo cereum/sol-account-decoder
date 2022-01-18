@@ -24,7 +24,6 @@ export const SchemaSelector = ({
       label: "Schema",
     },
   ];
-  const defaultOption = options[0];
 
   const onChange = (option: Option) => {
     setSchemaType(option.value);
