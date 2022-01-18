@@ -13,14 +13,10 @@ export type SchemaType = "raw" | "anchor" | "schema";
 export const DecoderSelector = () => {
   const [publicKey, setPublicKey] = useState<"">();
   const [schema, setSchemaType] = useState<SchemaType>("raw");
-  const [error, setError] = useState("");
 
   let navigate = useNavigate();
 
   const handleSubmit = () => {
-    if (publicKey === "") {
-      setError("Please Enter Public Key");
-    }
     try {
       const pubKey = new PublicKey(publicKey!);
       if (schema === "raw") {
@@ -31,8 +27,6 @@ export const DecoderSelector = () => {
         navigate(`/raw/${pubKey.toString()}`);
       }
     } catch (error) {
-      setError("Invalid Public Key");
-      console.error(error);
       Toast.show({ intent: "danger", message: "Invalid Public Key" });
     }
   };
@@ -43,7 +37,6 @@ export const DecoderSelector = () => {
       <Button intent="primary" style={{ marginTop: 8 }} onClick={handleSubmit}>
         Submit
       </Button>
-      {error && <h3>{error}</h3>}
     </Container>
   );
 };

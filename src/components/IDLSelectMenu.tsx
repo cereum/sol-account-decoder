@@ -1,39 +1,27 @@
 import { Button, MenuItem } from "@blueprintjs/core";
 import { Select } from "@blueprintjs/select";
 import { HTMLAttributes } from "react";
-import { SchemaType } from "../pages";
 
-interface Option {
-  value: SchemaType;
+export interface Option {
+  value: string;
   label: string;
 }
 
 const SchemaSelect = Select.ofType<Option>();
 
-export function Dropdown({
+export function IDLSelectMenu({
   className,
+  //   value,
+  options,
+  selectOption,
   ...props
 }: HTMLAttributes<HTMLButtonElement> & {
-  schema: SchemaType;
-  setSchemaType: Function;
+  //   value: SchemaType;
+  options: Option[];
+  selectOption: Function;
 }) {
-  const options: Option[] = [
-    {
-      value: "raw",
-      label: "Raw",
-    },
-    {
-      value: "anchor",
-      label: "Anchor IDL",
-    },
-    {
-      value: "schema",
-      label: "Schema",
-    },
-  ];
-
   const onChange = (option: Option) => {
-    props.setSchemaType(option.value);
+    selectOption(option.value);
   };
 
   return (
@@ -44,7 +32,7 @@ export function Dropdown({
         return (
           <MenuItem
             text={item.label}
-            active={item.value === props.schema}
+            // active={item.value === value}
             onClick={(e: any) => handleClick(e)}
             shouldDismissPopover={false}
           />
@@ -53,10 +41,7 @@ export function Dropdown({
       noResults={<MenuItem disabled={true} text="No results." />}
       onItemSelect={onChange}
     >
-      <Button
-        text={`Schema Option: ${props.schema}`}
-        rightIcon="double-caret-vertical"
-      />
+      <Button text={"Select Account"} rightIcon="double-caret-vertical" />
     </SchemaSelect>
   );
 }

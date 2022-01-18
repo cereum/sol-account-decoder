@@ -4,19 +4,19 @@ import { Program } from "@project-serum/anchor/dist/cjs/program";
 import { useSolana } from "@saberhq/use-solana";
 import { PublicKey } from "@solana/web3.js";
 import { useState } from "react";
-import Drop, { Option } from "react-dropdown";
 import { IDLInput } from "../components/IDLInput";
 import camelcase from "camelcase";
 import { useParams } from "react-router-dom";
 import ReactJson from "react-json-view";
 import { BallTriangle } from "react-loader-spinner";
+import { IDLSelectMenu, Option } from "../components/IDLSelectMenu";
 
 export const DecodeAnchor = () => {
   const { accountPubkey } = useParams<{ accountPubkey: string }>();
   const [program, setProgram] = useState<Program>();
   const { provider } = useSolana();
   const [idl, setIDL] = useState<any>();
-  const [options, setOptions] = useState<Option[]>();
+  const [options, setOptions] = useState<Option[]>([]);
   const [accountContents, setAccountContents] = useState<any>();
   const [isLoading, setLoading] = useState(false);
 
@@ -66,9 +66,7 @@ export const DecodeAnchor = () => {
     <div>
       <div>
         <IDLInput setFile={validateIDL} />
-        <Button onClick={handleSubmit}>
-          Submit
-        </Button>
+        <Button onClick={handleSubmit}>Submit</Button>
       </div>
     </div>
   ) : (
@@ -78,12 +76,7 @@ export const DecodeAnchor = () => {
       ) : isLoading ? (
         <BallTriangle color="#ffba01" height={100} width={100} />
       ) : null}
-      <Drop
-        onChange={onDropDownChange}
-        options={options!}
-        placeholder="Select an option"
-        className={`bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded text-center`}
-      />
+      <IDLSelectMenu selectOption={onDropDownChange} options={options} />
     </>
   );
 };
