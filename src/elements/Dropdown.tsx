@@ -7,11 +7,15 @@ export function Dropdown({
 }: HTMLAttributes<HTMLButtonElement> & { setSchemaType: Function }) {
   const options = [
     {
-      value: "anchor",
-      label: "Raw Anchor Schema",
+      value: "raw",
+      label: "Raw",
     },
     {
-      value: "raw",
+      value: "anchor",
+      label: "Anchor IDL",
+    },
+    {
+      value: "schema",
       label: "Schema",
     },
   ];
