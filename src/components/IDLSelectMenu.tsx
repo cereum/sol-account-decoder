@@ -41,7 +41,11 @@ export function IDLSelectMenu({
       noResults={<MenuItem disabled={true} text="No results." />}
       onItemSelect={onChange}
     >
-      <Button text={"Select Account"} rightIcon="double-caret-vertical" />
+      <Button
+        style={{ marginTop: 18 }}
+        text="Select Account"
+        rightIcon="double-caret-vertical"
+      />
     </SchemaSelect>
   );
 }

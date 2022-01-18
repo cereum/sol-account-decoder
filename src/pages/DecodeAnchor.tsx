@@ -48,11 +48,11 @@ export const DecodeAnchor = () => {
     }
   };
 
-  const onDropDownChange = async (option: Option) => {
+  const onDropDownChange = async (value: string) => {
     try {
       setLoading(true);
       setAccountContents(
-        await program!.account[camelcase(option.value)].fetch(
+        await program!.account[camelcase(value)].fetch(
           new PublicKey(accountPubkey!)
         )
       );
