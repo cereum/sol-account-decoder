@@ -6,7 +6,8 @@ import { PublicKeyInput } from "../components/PublicKeyInput";
 
 type DecoderState = "input" | "anchor" | "unparsed";
 
-export const Decoder = () => {
+
+export const DecoderSelector = () => {
   const [decoderState, setDecoderState] = useState<DecoderState>("input");
   const [accountKey, setAccountKey] = useState<PublicKey>();
   const [, setSchema] = useState<{}>();
