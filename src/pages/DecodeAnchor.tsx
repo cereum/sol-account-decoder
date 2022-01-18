@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import ReactJson from "react-json-view";
 import { BallTriangle } from "react-loader-spinner";
 import { IDLSelectMenu, Option } from "../components/IDLSelectMenu";
+import { Container } from "../components/UI";
 
 export const DecodeAnchor = () => {
   const { accountPubkey } = useParams<{ accountPubkey: string }>();
@@ -70,13 +71,17 @@ export const DecodeAnchor = () => {
       </div>
     </div>
   ) : (
-    <>
+    <Container>
+      <IDLSelectMenu selectOption={onDropDownChange} options={options} />
       {accountContents ? (
-        <ReactJson src={accountContents} />
+        <ReactJson
+          collapsed
+          src={accountContents}
+          style={{ textAlign: "left", marginTop: 12, width: 350 }}
+        />
       ) : isLoading ? (
         <BallTriangle color="#ffba01" height={100} width={100} />
       ) : null}
-      <IDLSelectMenu selectOption={onDropDownChange} options={options} />
-    </>
+    </Container>
   );
 };

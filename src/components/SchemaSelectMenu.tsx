@@ -43,6 +43,7 @@ export function Dropdown({
       itemRenderer={(item, { handleClick }) => {
         return (
           <MenuItem
+            key={item.label}
             text={item.label}
             active={item.value === props.schema}
             onClick={(e: any) => handleClick(e)}
