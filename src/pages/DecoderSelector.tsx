@@ -2,11 +2,11 @@ import { Button } from "@blueprintjs/core";
 import { PublicKey } from "@solana/web3.js";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
 
 import { PublicKeyInput } from "../components/PublicKeyInput";
 import { SchemaSelector } from "../components/SchemaSelector";
 import { Toast } from "../components/Toaster";
+import { Container } from "../components/UI";
 
 export type SchemaType = "raw" | "anchor" | "schema";
 
@@ -40,10 +40,3 @@ export const DecoderSelector = () => {
     </Container>
   );
 };
-
-const Container = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-`;

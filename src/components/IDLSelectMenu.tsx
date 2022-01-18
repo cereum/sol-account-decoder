@@ -31,6 +31,7 @@ export function IDLSelectMenu({
       itemRenderer={(item, { handleClick }) => {
         return (
           <MenuItem
+            key={item.label}
             text={item.label}
             // active={item.value === value}
             onClick={(e: any) => handleClick(e)}
