@@ -30,6 +30,9 @@ export const DecoderSelector = () => {
       else if(schema==="anchor"){
         navigate(`/anchor/${pubKey.toString()}`);
       }
+      else{
+        navigate(`/raw/${pubKey.toString()}`);
+      }
     } catch (error) {
       setError("Invalid Public Key");
       console.log(error);
