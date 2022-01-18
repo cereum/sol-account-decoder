@@ -4,7 +4,8 @@ import { useState } from "react";
 import { NavBar } from "./components";
 import { CacheSwitch } from "react-router-cache-route";
 
-import { Decoder } from "./pages";
+import { Decoder, AccountInfoHexViewer } from "./pages";
+import { DecodeAnchor } from "./pages/DecodeAnchor";
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,12 +20,17 @@ function App() {
         <CacheSwitch>
           <>
             <NavBar toggle={toggle} />
-            <Route exact path={"/decoder"}>
+            <Route path={"/decoder"}>
               <Decoder />
             </Route>
-            <Route exact path={"/"}>
+            <Route path={"/"}>
               <Decoder />
             </Route>
+            <Route
+              path="/raw/:accountPubkey"
+              element={AccountInfoHexViewer}
+            />
+            <Route path="/anchor/:accountPubkey" element={DecodeAnchor} />
           </>
         </CacheSwitch>
       </Router>

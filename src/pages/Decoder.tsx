@@ -1,33 +1,16 @@
-import { useSolana } from "@saberhq/use-solana";
-import { AccountInfo, PublicKey } from "@solana/web3.js";
-import { useState, useEffect } from "react";
-import { AccountViewer } from "../components/AccountViewer";
+import { PublicKey } from "@solana/web3.js";
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
 
 import { PublicKeyInput } from "../components/PublicKeyInput";
-import { Box } from "../elements";
 
-type DecoderState = "input" | "parsed" | "unparsed";
+type DecoderState = "input" | "anchor" | "unparsed";
 
 export const Decoder = () => {
-  const { connection } = useSolana();
   const [decoderState, setDecoderState] = useState<DecoderState>("input");
-  const [accountInfo, setAccountInfo] = useState<AccountInfo<Buffer> | null>();
   const [accountKey, setAccountKey] = useState<PublicKey>();
   const [, setSchema] = useState<{}>();
-
-  const getAccountInfo = async () => {
-    try {
-      const accountInfo = await connection.getAccountInfo(accountKey!);
-      setAccountInfo(accountInfo);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getAccountInfo();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [decoderState]);
+  let history = useHistory();
 
   const switchState = (state: DecoderState) => {
     switch (state) {
@@ -41,21 +24,16 @@ export const Decoder = () => {
         );
       }
       case "unparsed": {
-        return accountInfo ? (
-          <AccountViewer accountInfo={accountInfo}></AccountViewer>
-        ) : (
-          <Box.Center>
-            <p
-              className="text-2xl font-extrabold text-gray-600"
-              style={{ textAlign: "center" }}
-            >
-              Whoops! We can't seem to find any information about this account.
-            </p>
-          </Box.Center>
-        );
+        if (accountKey) {
+          history.push(`/raw/${accountKey.toString()}`);
+        }
+        break;
       }
-      case "parsed": {
-        return <p>Schema Parser</p>;
+      case "anchor": {
+        if (accountKey) {
+          history.push(`/anchor/${accountKey.toString()}`);
+        }
+        break;
       }
     }
   };
