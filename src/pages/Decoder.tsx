@@ -4,20 +4,21 @@ import { useState, useEffect } from "react";
 import { AccountViewer } from "../components/AccountViewer";
 
 import { PublicKeyInput } from "../components/PublicKeyInput";
+import { Box } from "../elements";
 
 type DecoderState = "input" | "parsed" | "unparsed";
 
 export const Decoder = () => {
   const { connection } = useSolana();
   const [decoderState, setDecoderState] = useState<DecoderState>("input");
-  const [accountInfo, setAccountInfo] = useState<AccountInfo<Buffer>>();
+  const [accountInfo, setAccountInfo] = useState<AccountInfo<Buffer> | null>();
   const [accountKey, setAccountKey] = useState<PublicKey>();
   const [, setSchema] = useState<{}>();
 
   const getAccountInfo = async () => {
     try {
       const accountInfo = await connection.getAccountInfo(accountKey!);
-      setAccountInfo(accountInfo!);
+      setAccountInfo(accountInfo);
     } catch (error) {
       console.log(error);
     }
@@ -42,7 +43,16 @@ export const Decoder = () => {
       case "unparsed": {
         return accountInfo ? (
           <AccountViewer accountInfo={accountInfo}></AccountViewer>
-        ) : null;
+        ) : (
+          <Box.Center>
+            <p
+              className="text-2xl font-extrabold text-gray-600"
+              style={{ textAlign: "center" }}
+            >
+              Whoops! We can't seem to find any information about this account.
+            </p>
+          </Box.Center>
+        );
       }
       case "parsed": {
         return <p>Schema Parser</p>;
