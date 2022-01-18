@@ -127,10 +127,10 @@ export const DecodeAnchor = () => {
           style={{
             textAlign: "left",
             marginTop: 12,
-            width: 350,
+            paddingRight: 24,
             background: "rgb(25, 25, 25)",
           }}
-          theme={"twilight"}
+          theme="twilight"
         />
       ) : isLoading ? (
         <BallTriangle color="#ffba01" height={100} width={100} />
