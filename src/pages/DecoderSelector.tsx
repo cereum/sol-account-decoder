@@ -7,11 +7,11 @@ import { PublicKeyInput } from "../components/PublicKeyInput";
 import { SchemaSelector } from "../components/SchemaSelector";
 import { Button } from "../elements";
 
-type SchemaType = "raw" | "anchor" | "schema";
+export type SchemaType = "raw" | "anchor" | "schema";
 
 export const DecoderSelector = () => {
   const [publicKey, setPublicKey] = useState<"">();
-  const [schema, setSchemaType] = useState<"raw">();
+  const [schema, setSchemaType] = useState<SchemaType>("raw");
   const [error, setError] = useState("");
 
   let navigate = useNavigate();
@@ -38,7 +38,7 @@ export const DecoderSelector = () => {
     <div className="min-h-screen bg-yellow-50 py-8 px-4">
       <div className="flex flex-col items-center max-w-7xl mx-auto">
         <PublicKeyInput setPublicKey={setPublicKey} />
-        <SchemaSelector setSchemaType={setSchemaType} />
+        <SchemaSelector schema={schema} setSchemaType={setSchemaType} />
         <Button className="px-3 py-3 my-4 w-half" onClick={handleSubmit}>
           Submit
         </Button>
