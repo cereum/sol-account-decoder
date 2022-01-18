@@ -6,6 +6,7 @@ import { AccountViewer } from "../components/AccountViewer";
 
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { BallTriangle } from "react-loader-spinner";
+import { Toast } from "../components/Toaster";
 
 export const AccountInfoHexViewer = () => {
   const { accountPubkey } = useParams<{ accountPubkey: string }>();
@@ -19,7 +20,7 @@ export const AccountInfoHexViewer = () => {
       );
       setAccountInfo(accountInfo);
     } catch (error) {
-      console.log(error);
+      Toast.show({ intent: "danger", message: (error as any).toString() });
     }
   };
 

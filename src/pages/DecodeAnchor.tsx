@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import ReactJson from "react-json-view";
 import { BallTriangle } from "react-loader-spinner";
 import { IDLSelectMenu, Option } from "../components/IDLSelectMenu";
+import { Toast } from "../components/Toaster";
 
 export const DecodeAnchor = () => {
   const { accountPubkey } = useParams<{ accountPubkey: string }>();
@@ -30,7 +31,10 @@ export const DecodeAnchor = () => {
         )
       );
     } catch (error) {
-      console.log(error);
+      Toast.show({
+        intent: "danger",
+        message: "Unable to parse Program from IDL File",
+      });
     }
   };
 
@@ -44,7 +48,10 @@ export const DecodeAnchor = () => {
         })
       );
     } catch (error) {
-      console.log(error);
+      Toast.show({
+        intent: "danger",
+        message: "Unable to parse IDL from file",
+      });
     }
   };
 
@@ -58,7 +65,10 @@ export const DecodeAnchor = () => {
       );
     } catch (error) {
       setLoading(false);
-      console.log(error);
+      Toast.show({
+        intent: "danger",
+        message: (error as any).toString(),
+      });
     }
   };
 
