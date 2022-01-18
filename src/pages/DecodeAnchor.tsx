@@ -1,13 +1,13 @@
+import { Button } from "@blueprintjs/core";
 import { Idl } from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor/dist/cjs/program";
 import { useSolana } from "@saberhq/use-solana";
 import { PublicKey } from "@solana/web3.js";
 import { useState } from "react";
-import { IDLInput } from "../components/IDLInput";
-import { Button } from "../elements";
 import Drop, { Option } from "react-dropdown";
-import { useParams } from "react-router-dom";
+import { IDLInput } from "../components/IDLInput";
 import camelcase from "camelcase";
+import { useParams } from "react-router-dom";
 import ReactJson from "react-json-view";
 import { BallTriangle } from "react-loader-spinner";
 
@@ -63,10 +63,10 @@ export const DecodeAnchor = () => {
   };
 
   return !program ? (
-    <div className="min-h-screen bg-yellow-50 py-8 px-4">
-      <div className="flex flex-col items-center max-w-7xl mx-auto">
+    <div>
+      <div>
         <IDLInput setFile={validateIDL} />
-        <Button className="px-3 py-3 my-4 w-full" onClick={handleSubmit}>
+        <Button onClick={handleSubmit}>
           Submit
         </Button>
       </div>

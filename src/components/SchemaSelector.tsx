@@ -1,15 +1,16 @@
+import { H3 } from "@blueprintjs/core";
 import { Dropdown } from "../elements/Dropdown";
 import Drop, { Option } from "react-dropdown";
 import { SchemaType } from "../pages";
 
 export const SchemaSelector = ({
+  schema,
   setSchemaType,
-  schema
 }: {
+  schema: SchemaType;
   setSchemaType: Function;
-  schema: SchemaType
 }) => {
-    const options = [
+  const options = [
     {
       value: "raw",
       label: "Raw",
@@ -31,19 +32,10 @@ export const SchemaSelector = ({
 
   return (
     <div>
-      <h2
-        className="text-3xl font-extrabold text-gray-600"
-        style={{ textAlign: "center" }}
-      >
+      <H3 style={{ margin: 18, textAlign: "center" }}>
         Select Account Display
-      </h2>
-      <Drop
-      onChange={onChange}
-      options={options}
-      value={schema}
-      placeholder="Select an option"
-      className={`bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded text-center`}
-    />
+      </H3>
+      <Dropdown schema={schema} setSchemaType={setSchemaType} />
     </div>
-   );
+  );
 };

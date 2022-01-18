@@ -1,33 +1,29 @@
+import { H3, InputGroup } from "@blueprintjs/core";
+import styled from "styled-components";
+
 export const PublicKeyInput = ({
   setPublicKey,
 }: {
   setPublicKey: Function;
 }) => {
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const name = event.target.name;
-    const value = event.target.value;
-    if (name === "key") {
-      setPublicKey(value);
-    }
-  };
-
   return (
     <div>
-      <h2
-        className="text-3xl font-extrabold text-gray-600"
-        style={{ textAlign: "center" }}
-      >
-        Enter Account Address
-      </h2>
-      <input
+      <H3 style={{ margin: 18, textAlign: "center" }}>Enter Account Address</H3>
+      <Input
         type="text"
-        name="key"
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          handleChange(event);
+          setPublicKey(event.target.value);
         }}
-        placeholder="Address"
-        className="px-3 py-3 my-4 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full"
+        placeholder="Enter an address"
       />
     </div>
   );
 };
+
+const Input = styled(InputGroup)`
+  padding: 6px;
+  width: 100%;
+  border-radius: 2px;
+  outline: none;
+  border: none;
+`;

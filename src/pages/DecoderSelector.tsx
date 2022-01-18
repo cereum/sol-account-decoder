@@ -1,11 +1,12 @@
-import { publicKey } from "@project-serum/anchor/dist/cjs/utils";
+import { Button } from "@blueprintjs/core";
 import { PublicKey } from "@solana/web3.js";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
 import { PublicKeyInput } from "../components/PublicKeyInput";
 import { SchemaSelector } from "../components/SchemaSelector";
-import { Button } from "../elements";
+import { Toast } from "../components/Toaster";
 
 export type SchemaType = "raw" | "anchor" | "schema";
 
@@ -31,19 +32,25 @@ export const DecoderSelector = () => {
       }
     } catch (error) {
       setError("Invalid Public Key");
-      console.log(error);
+      console.error(error);
+      Toast.show({ intent: "danger", message: "Invalid Public Key" });
     }
   };
   return (
-    <div className="min-h-screen bg-yellow-50 py-8 px-4">
-      <div className="flex flex-col items-center max-w-7xl mx-auto">
-        <PublicKeyInput setPublicKey={setPublicKey} />
-        <SchemaSelector schema={schema} setSchemaType={setSchemaType} />
-        <Button className="px-3 py-3 my-4 w-half" onClick={handleSubmit}>
-          Submit
-        </Button>
-        {error && <h2>{error}</h2>}
-      </div>
-    </div>
+    <Container>
+      <PublicKeyInput setPublicKey={setPublicKey} />
+      <SchemaSelector schema={schema} setSchemaType={setSchemaType} />
+      <Button intent="primary" style={{ marginTop: 8 }} onClick={handleSubmit}>
+        Submit
+      </Button>
+      {error && <h3>{error}</h3>}
+    </Container>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+`;

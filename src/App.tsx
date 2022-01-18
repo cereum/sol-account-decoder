@@ -1,9 +1,8 @@
-// eslint-disable-next-line
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import { NavBar } from "./components";
 
-import {AccountInfoHexViewer } from "./pages";
+import { AccountInfoHexViewer } from "./pages";
 import { DecodeAnchor } from "./pages/DecodeAnchor";
 import { DecoderSelector } from "./pages";
 
@@ -15,7 +14,7 @@ function App() {
   };
 
   return (
-    <>
+    <div className="_bp3-dark">
       <Router>
         <NavBar toggle={toggle} />
         <Routes>
@@ -26,9 +25,8 @@ function App() {
           />
           <Route path="/anchor/:accountPubkey" element={<DecodeAnchor />} />
         </Routes>
-
       </Router>
-    </>
+    </div>
   );
 }
 
