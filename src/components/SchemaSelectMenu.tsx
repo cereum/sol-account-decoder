@@ -61,14 +61,4 @@ export function Dropdown({
       />
     </SchemaSelect>
   );
-
-  // return (
-  //   <Drop
-  //     onChange={onChange}
-  //     options={options}
-  //     value={defaultOption}
-  //     placeholder="Select an option"
-  //     className={`bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded text-center ${className}`}
-  //   />
-  // );
 }
