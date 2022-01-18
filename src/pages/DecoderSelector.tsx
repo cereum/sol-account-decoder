@@ -9,7 +9,6 @@ import { Button } from "../elements";
 
 type SchemaType = "raw" | "anchor" | "schema";
 
-
 export const DecoderSelector = () => {
   const [publicKey, setPublicKey] = useState<"">();
   const [schema, setSchemaType] = useState<"raw">();
@@ -22,12 +21,10 @@ export const DecoderSelector = () => {
       setError("Please Enter Public Key");
     }
     try {
-      const pubKey= new PublicKey(publicKey!);
-      if(schema==="raw"){
+      const pubKey = new PublicKey(publicKey!);
+      if (schema === "raw") {
         navigate(`/raw/${pubKey.toString()}`);
-
-      }
-      else if(schema==="anchor"){
+      } else if (schema === "anchor") {
         navigate(`/anchor/${pubKey.toString()}`);
       }
       else{
@@ -41,16 +38,12 @@ export const DecoderSelector = () => {
   return (
     <div className="min-h-screen bg-yellow-50 py-8 px-4">
       <div className="flex flex-col items-center max-w-7xl mx-auto">
-          <PublicKeyInput
-            setPublicKey={setPublicKey}
-          />
-          <SchemaSelector
-            setSchemaType={setSchemaType}
-          />
-          <Button className="px-3 py-3 my-4 w-full" onClick={handleSubmit}>
-            Submit
-          </Button>
-      {error && <h2>{error}</h2>}
+        <PublicKeyInput setPublicKey={setPublicKey} />
+        <SchemaSelector setSchemaType={setSchemaType} />
+        <Button className="px-3 py-3 my-4 w-half" onClick={handleSubmit}>
+          Submit
+        </Button>
+        {error && <h2>{error}</h2>}
       </div>
     </div>
   );

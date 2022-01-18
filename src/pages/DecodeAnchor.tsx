@@ -3,11 +3,10 @@ import { useParams } from "react-router-dom";
 
 export const DecodeAnchor = () => {
   const { accountPubkey } = useParams<{ accountPubkey: string }>();
-  
+
   return (
     <div>
-      <input>
-      </input>
+      <input></input>
     </div>
   );
 };

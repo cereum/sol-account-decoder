@@ -5,17 +5,6 @@ export const SchemaSelector = ({
 }: {
   setSchemaType: Function;
 }) => {
-
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const name = event.target.name;
-    const value = event.target.value;
-    if(name=="schema"){
-        setSchemaType(value);
-    }
-  };
-  
-
   return (
     <div>
       <h2
@@ -24,8 +13,7 @@ export const SchemaSelector = ({
       >
         Select Account Display
       </h2>
-      <Dropdown/>
-      
+      <Dropdown setSchemaType={setSchemaType} />
     </div>
   );
 };
