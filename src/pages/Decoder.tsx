@@ -1,6 +1,6 @@
 import { PublicKey } from "@solana/web3.js";
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { PublicKeyInput } from "../components/PublicKeyInput";
 
@@ -10,7 +10,7 @@ export const Decoder = () => {
   const [decoderState, setDecoderState] = useState<DecoderState>("input");
   const [accountKey, setAccountKey] = useState<PublicKey>();
   const [, setSchema] = useState<{}>();
-  let history = useHistory();
+  let navigate = useNavigate();
 
   const switchState = (state: DecoderState) => {
     switch (state) {
@@ -25,13 +25,13 @@ export const Decoder = () => {
       }
       case "unparsed": {
         if (accountKey) {
-          history.push(`/raw/${accountKey.toString()}`);
+          navigate(`/raw/${accountKey.toString()}`);
         }
         break;
       }
       case "anchor": {
         if (accountKey) {
-          history.push(`/anchor/${accountKey.toString()}`);
+          navigate(`/anchor/${accountKey.toString()}`);
         }
         break;
       }

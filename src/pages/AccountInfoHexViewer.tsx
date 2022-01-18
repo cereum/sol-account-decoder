@@ -44,6 +44,10 @@ export const AccountInfoHexViewer = () => {
       </Box.Center>
     );
   } else {
-    return <BallTriangle color="#ffba01" height={100} width={100} />;
+    return (
+      <Box.Center>
+        <BallTriangle color="#ffba01" height={100} width={100} />{" "}
+      </Box.Center>
+    );
   }
 };
