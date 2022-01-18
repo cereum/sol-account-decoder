@@ -10,7 +10,6 @@ type DecoderState = "input" | "anchor" | "unparsed";
 export const DecoderSelector = () => {
   const [decoderState, setDecoderState] = useState<DecoderState>("input");
   const [accountKey, setAccountKey] = useState<PublicKey>();
-  const [, setSchema] = useState<{}>();
   let navigate = useNavigate();
 
   const switchState = (state: DecoderState) => {
@@ -19,7 +18,6 @@ export const DecoderSelector = () => {
         return (
           <PublicKeyInput
             setPublicKey={setAccountKey}
-            setSchema={setSchema}
             setDecoderState={setDecoderState}
           ></PublicKeyInput>
         );
