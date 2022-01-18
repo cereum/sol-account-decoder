@@ -1,15 +1,14 @@
-import { Dropdown } from "../elements/Dropdown";
 import Drop, { Option } from "react-dropdown";
 import { SchemaType } from "../pages";
 
 export const SchemaSelector = ({
   setSchemaType,
-  schema
+  schema,
 }: {
   setSchemaType: Function;
-  schema: SchemaType
+  schema: SchemaType;
 }) => {
-    const options = [
+  const options = [
     {
       value: "raw",
       label: "Raw",
@@ -23,7 +22,6 @@ export const SchemaSelector = ({
       label: "Schema",
     },
   ];
-  const defaultOption = options[0];
 
   const onChange = (option: Option) => {
     setSchemaType(option.value);
@@ -38,12 +36,11 @@ export const SchemaSelector = ({
         Select Account Display
       </h2>
       <Drop
-      onChange={onChange}
-      options={options}
-      value={schema}
-      placeholder="Select an option"
-      className={`bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded text-center`}
-    />
+        onChange={onChange}
+        options={options}
+        placeholder="Select an option"
+        className={`bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded text-center`}
+      />
     </div>
-   );
+  );
 };
