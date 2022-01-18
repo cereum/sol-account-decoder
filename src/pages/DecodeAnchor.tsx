@@ -1,5 +1,5 @@
 import { Button } from "@blueprintjs/core";
-import { Idl } from "@project-serum/anchor";
+import { BN, Idl } from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor/dist/cjs/program";
 import { useSolana } from "@saberhq/use-solana";
 import { PublicKey } from "@solana/web3.js";
@@ -59,11 +59,33 @@ export const DecodeAnchor = () => {
   const onDropDownChange = async (value: string) => {
     try {
       setLoading(true);
-      setAccountContents(
+
+      const objectEntries = Object.entries(
         await program!.account[camelcase(value)].fetch(
           new PublicKey(accountPubkey!)
         )
-      );
+      ).map((x: any) => {
+        const [key, value] = x;
+
+        if (value instanceof PublicKey) {
+          return [key, value.toString()];
+        } else if (value instanceof BN) {
+          return [key, value.toString()];
+        } else if (value instanceof Object) {
+          for (const [key, _value] of Object.entries(value)) {
+            value[key] = (_value as any).toString();
+          }
+          return [key, value];
+        } else {
+          return [key, value];
+        }
+      });
+
+      const object: { [key: string]: any } = {};
+      for (const entry of objectEntries) {
+        object[entry![0] as any] = entry![1];
+      }
+      setAccountContents(object);
     } catch (error) {
       setLoading(false);
       Toast.show({
@@ -87,7 +109,13 @@ export const DecodeAnchor = () => {
         <ReactJson
           collapsed
           src={accountContents}
-          style={{ textAlign: "left", marginTop: 12, width: 350 }}
+          style={{
+            textAlign: "left",
+            marginTop: 12,
+            paddingRight: 24,
+            background: "rgb(25, 25, 25)",
+          }}
+          theme="twilight"
         />
       ) : isLoading ? (
         <BallTriangle color="#ffba01" height={100} width={100} />
