@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { PublicKey } from "@solana/web3.js";
 import { Button } from "../elements";
+import { SchemaInput } from "./SchemaInput";
 
 export const PublicKeyInput = ({
   setPublicKey,
@@ -70,17 +71,7 @@ export const PublicKeyInput = ({
         />
         <p className="text-sm">Schema?</p>
       </div>
-      {checked ? (
-        <input
-          type="text"
-          name="schema"
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            handleChange(event);
-          }}
-          placeholder="Schema"
-          className="px-3 py-3 my-4 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full"
-        />
-      ) : null}
+      {checked ? <SchemaInput onChange={handleChange} /> : null}
       <Button className="px-3 py-3 my-4 w-full" onClick={handleSubmit}>
         Submit
       </Button>
