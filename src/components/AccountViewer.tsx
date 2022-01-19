@@ -1,7 +1,6 @@
 import "react-hexviewer-ts/scss/hex-viewer.scss";
 import { HexViewer } from "react-hexviewer-ts";
 import { AccountInfo } from "@solana/web3.js";
-import { Box } from "../elements";
 
 export const AccountViewer = ({
   accountInfo,
@@ -17,11 +16,11 @@ export const AccountViewer = ({
         Hex View of Account Info
       </h2>
       <div className="w-screen m-8">
-        <Box.Center>
+        <div>
           <HexViewer hex rowLength={16} setLength={4}>
             {accountInfo!.data.toString("hex")}
           </HexViewer>
-        </Box.Center>
+        </div>
       </div>
     </>
   );

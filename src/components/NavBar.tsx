@@ -1,26 +1,49 @@
-import { Popover } from "@headlessui/react";
+import { Link } from "react-router-dom";
+import { Button, H2 } from "@blueprintjs/core";
+import styled from "styled-components";
 import { useSolana } from "@saberhq/use-solana";
-require("./NavBar.css");
+
 type Props = {
-  toggle: () => void;
+  toggleAppTheme: () => void;
 };
-export const NavBar = <PROPS extends Props & React.HTMLAttributes<any>>({
-  toggle,
-}: PROPS) => {
+
+export const NavBar = <NavBarProps extends Props & React.HTMLAttributes<any>>({
+  toggleAppTheme,
+}: NavBarProps) => {
   const { network } = useSolana();
   return (
-    <Popover className="relative bg-yellow-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="flex justify-between items-center py-6 md:justify-start md:space-x-10 navBar">
-          <div className="md:flex items-center justify-end md:flex-1 lg:w-0 wallet">
-            <p
-              className={`ml-8 md:w-50 bg-yellow-500 text-white font-bold py-1 px-4 rounded text-center`}
-            >
-              {network}
-            </p>
-          </div>
-        </div>
+    <Header>
+      <NavLink to="/">
+        <H2 style={{ margin: 0 }}>Solana Account Decoder</H2>
+      </NavLink>
+      <div>
+        <Button text={network} />
+        <Button
+          style={{ marginLeft: 2 }}
+          onClick={toggleAppTheme}
+          icon="lightbulb"
+        />
       </div>
-    </Popover>
+    </Header>
   );
 };
+
+const NavLink = styled(Link)`
+  :hover {
+    outline: none;
+    cursor: pointer;
+    text-decoration: none;
+  }
+`;
+
+const Header = styled.div`
+  height: 45px;
+  background: rgb(25, 25, 25, 0.1);
+  border-bottom: 1px solid rgba(5, 5, 5, 0.5);
+  padding-right: 8px;
+  padding-left: 8px;
+  display: flex;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;

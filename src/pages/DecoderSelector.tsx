@@ -1,48 +1,42 @@
+import { Button } from "@blueprintjs/core";
 import { PublicKey } from "@solana/web3.js";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { PublicKeyInput } from "../components/PublicKeyInput";
+import { SchemaSelector } from "../components/SchemaSelector";
+import { Toast } from "../components/Toaster";
+import { Container } from "../components/UI";
 
-type DecoderState = "input" | "anchor" | "unparsed";
-
+export type SchemaType = "raw" | "anchor" | "schema";
 
 export const DecoderSelector = () => {
-  const [decoderState, setDecoderState] = useState<DecoderState>("input");
-  const [accountKey, setAccountKey] = useState<PublicKey>();
-  const [, setSchema] = useState<{}>();
+  const [publicKey, setPublicKey] = useState<"">();
+  const [schema, setSchemaType] = useState<SchemaType>("raw");
+
   let navigate = useNavigate();
 
-  const switchState = (state: DecoderState) => {
-    switch (state) {
-      case "input": {
-        return (
-          <PublicKeyInput
-            setPublicKey={setAccountKey}
-            setSchema={setSchema}
-            setDecoderState={setDecoderState}
-          ></PublicKeyInput>
-        );
+  const handleSubmit = () => {
+    try {
+      const pubKey = new PublicKey(publicKey!);
+      if (schema === "raw") {
+        navigate(`/raw/${pubKey.toString()}`);
+      } else if (schema === "anchor") {
+        navigate(`/anchor/${pubKey.toString()}`);
+      } else {
+        navigate(`/raw/${pubKey.toString()}`);
       }
-      case "unparsed": {
-        if (accountKey) {
-          navigate(`/raw/${accountKey.toString()}`);
-        }
-        break;
-      }
-      case "anchor": {
-        if (accountKey) {
-          navigate(`/anchor/${accountKey.toString()}`);
-        }
-        break;
-      }
+    } catch (error) {
+      Toast.show({ intent: "danger", message: "Invalid Public Key" });
     }
   };
   return (
-    <div className="min-h-screen bg-yellow-50 py-8 px-4">
-      <div className="flex flex-col items-center max-w-7xl mx-auto">
-        {switchState(decoderState)}
-      </div>
-    </div>
+    <Container>
+      <PublicKeyInput setPublicKey={setPublicKey} />
+      <SchemaSelector schema={schema} setSchemaType={setSchemaType} />
+      <Button intent="primary" style={{ marginTop: 8 }} onClick={handleSubmit}>
+        Submit
+      </Button>
+    </Container>
   );
 };
