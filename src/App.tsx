@@ -4,13 +4,15 @@ import { NavBar } from "./components/NavBar";
 import { AccountInfoHexViewer } from "./pages";
 import { DecodeAnchor } from "./pages/DecodeAnchor";
 import { DecoderSelector } from "./pages";
+import {ThemeContext, themes} from './themeContext';
 
 function App() {
-  const [isDarkTheme, setDarkTheme] = useState(false);
+  const [theme, setTheme] = useState();
 
   const toggleAppTheme = () => {
-    const isDark = !isDarkTheme;
-    setDarkTheme(isDark);
+    setTheme(themes.dark
+            ? themes.light
+            : themes.dark)
 
     // Toggle body class for light/dark theme background styles:
     const body = document.querySelector("body")!;
@@ -24,6 +26,7 @@ function App() {
   return (
     <div className={isDarkTheme ? "bp3-dark" : ""}>
       <Router>
+        <ThemeContext.Provider value={theme}>
         <NavBar toggleAppTheme={toggleAppTheme} />
         <Routes>
           <Route path={"/"} element={<DecoderSelector />} />
@@ -33,6 +36,7 @@ function App() {
           />
           <Route path="/anchor/:accountPubkey" element={<DecodeAnchor />} />
         </Routes>
+        </ThemeContext.Provider>
       </Router>
     </div>
   );
