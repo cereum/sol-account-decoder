@@ -7,7 +7,7 @@ import { DecoderSelector } from "./pages";
 import {ThemeContext} from './themeContext';
 
 function App() {
-  const [isDark, setTheme] = useState(false);
+  const [isDark, setTheme] = useState(true);
 
   const toggleAppTheme = () => {
     setTheme(!isDark);
@@ -26,7 +26,7 @@ function App() {
       <Router>
         <ThemeContext.Provider value={isDark}>
           <NavBar toggleAppTheme={toggleAppTheme} />
-        </ThemeContext.Provider>
+        
 
         <Routes>
           <Route path={"/"} element={<DecoderSelector />} />
@@ -36,6 +36,7 @@ function App() {
           />
           <Route path="/anchor/:accountPubkey" element={<DecodeAnchor />} />
         </Routes>
+        </ThemeContext.Provider>
       </Router>
     </div>
   );

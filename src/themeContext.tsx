@@ -1,5 +1,3 @@
 import { createContext} from "react";
 
-export const ThemeContext = createContext(
-false // default value
-);
+export const ThemeContext = createContext(true);
