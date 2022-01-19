@@ -7,6 +7,7 @@ import { AccountViewer } from "../components/AccountViewer";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { BallTriangle } from "react-loader-spinner";
 import { Toast } from "../components/Toaster";
+import { Container } from "../components/UI";
 
 export const AccountInfoHexViewer = () => {
   const { accountPubkey } = useParams<{ accountPubkey: string }>();
@@ -31,20 +32,24 @@ export const AccountInfoHexViewer = () => {
   });
 
   if (accountInfo) {
-    return <AccountViewer accountInfo={accountInfo}></AccountViewer>;
+    return (
+      <Container>
+        <AccountViewer accountInfo={accountInfo}></AccountViewer>{" "}
+      </Container>
+    );
   } else if (accountInfo === null) {
     return (
-      <div>
+      <Container>
         <p style={{ textAlign: "center" }}>
           Whoops! We can't seem to find any information about this account.
         </p>
-      </div>
+      </Container>
     );
   } else {
     return (
-      <div>
+      <Container>
         <BallTriangle color="#ffba01" height={100} width={100} />{" "}
-      </div>
+      </Container>
     );
   }
 };
