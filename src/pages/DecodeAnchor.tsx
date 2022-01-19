@@ -3,7 +3,7 @@ import { BN, Idl } from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor/dist/cjs/program";
 import { useSolana } from "@saberhq/use-solana";
 import { PublicKey } from "@solana/web3.js";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { IDLInput } from "../components/IDLInput";
 import camelcase from "camelcase";
 import { useParams } from "react-router-dom";
@@ -12,6 +12,7 @@ import { BallTriangle } from "react-loader-spinner";
 import { IDLSelectMenu, Option } from "../components/IDLSelectMenu";
 import { Toast } from "../components/Toaster";
 import { Container } from "../components/UI";
+import { ThemeContext } from "../themeContext";
 
 export const DecodeAnchor = () => {
   const { accountPubkey } = useParams<{ accountPubkey: string }>();
@@ -21,6 +22,8 @@ export const DecodeAnchor = () => {
   const [options, setOptions] = useState<Option[]>([]);
   const [accountContents, setAccountContents] = useState<any>();
   const [isLoading, setLoading] = useState(false);
+
+  const isDark = useContext(ThemeContext);
 
   const handleSubmit = () => {
     try {
@@ -128,9 +131,9 @@ export const DecodeAnchor = () => {
             textAlign: "left",
             marginTop: 12,
             paddingRight: 24,
-            background: "rgb(25, 25, 25)",
+            background: isDark ? "rgb(25, 25, 25)" : "#e8dcb2",
           }}
-          theme="twilight"
+          theme={isDark ? "twilight" : "rjv-default"}
         />
       ) : isLoading ? (
         <BallTriangle color="#ffba01" height={100} width={100} />

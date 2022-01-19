@@ -4,17 +4,17 @@ import { NavBar } from "./components/NavBar";
 import { AccountInfoHexViewer } from "./pages";
 import { DecodeAnchor } from "./pages/DecodeAnchor";
 import { DecoderSelector } from "./pages";
+import { ThemeContext } from "./themeContext";
 
 function App() {
-  const [isDarkTheme, setDarkTheme] = useState(false);
+  const [isDark, setTheme] = useState(true);
 
   const toggleAppTheme = () => {
-    const isDark = !isDarkTheme;
-    setDarkTheme(isDark);
+    setTheme(!isDark);
 
     // Toggle body class for light/dark theme background styles:
     const body = document.querySelector("body")!;
-    if (isDark) {
+    if (!isDark) {
       body.classList.add("dark");
     } else {
       body.classList.remove("dark");
@@ -22,17 +22,19 @@ function App() {
   };
 
   return (
-    <div className={isDarkTheme ? "bp3-dark" : ""}>
+    <div className={isDark ? "bp3-dark" : ""}>
       <Router>
-        <NavBar toggleAppTheme={toggleAppTheme} />
-        <Routes>
-          <Route path={"/"} element={<DecoderSelector />} />
-          <Route
-            path="/raw/:accountPubkey"
-            element={<AccountInfoHexViewer />}
-          />
-          <Route path="/anchor/:accountPubkey" element={<DecodeAnchor />} />
-        </Routes>
+        <ThemeContext.Provider value={isDark}>
+          <NavBar toggleAppTheme={toggleAppTheme} />
+          <Routes>
+            <Route path={"/"} element={<DecoderSelector />} />
+            <Route
+              path="/raw/:accountPubkey"
+              element={<AccountInfoHexViewer />}
+            />
+            <Route path="/anchor/:accountPubkey" element={<DecodeAnchor />} />
+          </Routes>
+        </ThemeContext.Provider>
       </Router>
     </div>
   );
