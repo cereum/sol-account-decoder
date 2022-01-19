@@ -56,6 +56,24 @@ export const DecodeAnchor = () => {
     }
   };
 
+  function decodeObject(object: any) {
+    const decodedObject: { [key: string]: any } = {};
+    if (
+      object instanceof Object &&
+      !(object instanceof PublicKey) &&
+      !(object instanceof BN) &&
+      !(typeof object === "string") &&
+      !(typeof object === "number")
+    ) {
+      for (const [key, value] of Object.entries(object)) {
+        decodedObject[key] = decodeObject(value);
+      }
+      return decodedObject;
+    } else if (object !== null) {
+      return object.toString();
+    }
+  }
+
   const onDropDownChange = async (value: string) => {
     try {
       setLoading(true);
@@ -72,10 +90,7 @@ export const DecodeAnchor = () => {
         } else if (value instanceof BN) {
           return [key, value.toString()];
         } else if (value instanceof Object) {
-          for (const [key, _value] of Object.entries(value)) {
-            value[key] = (_value as any).toString();
-          }
-          return [key, value];
+          return [key, decodeObject(value)];
         } else {
           return [key, value];
         }
