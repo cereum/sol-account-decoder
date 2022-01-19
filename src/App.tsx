@@ -14,7 +14,7 @@ function App() {
 
     // Toggle body class for light/dark theme background styles:
     const body = document.querySelector("body")!;
-    if (isDark) {
+    if (!isDark) {
       body.classList.add("dark");
     } else {
       body.classList.remove("dark");
@@ -24,17 +24,18 @@ function App() {
   return (
     <div className={isDark ? "bp3-dark" : ""}>
       <Router>
-        <NavBar toggleAppTheme={toggleAppTheme} />
         <ThemeContext.Provider value={isDark}>
-          <Routes>
-            <Route path={"/"} element={<DecoderSelector />} />
-            <Route
-              path="/raw/:accountPubkey"
-              element={<AccountInfoHexViewer />}
-            />
-            <Route path="/anchor/:accountPubkey" element={<DecodeAnchor />} />
-          </Routes>
+          <NavBar toggleAppTheme={toggleAppTheme} />
         </ThemeContext.Provider>
+
+        <Routes>
+          <Route path={"/"} element={<DecoderSelector />} />
+          <Route
+            path="/raw/:accountPubkey"
+            element={<AccountInfoHexViewer />}
+          />
+          <Route path="/anchor/:accountPubkey" element={<DecodeAnchor />} />
+        </Routes>
       </Router>
     </div>
   );
