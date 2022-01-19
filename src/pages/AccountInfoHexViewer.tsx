@@ -9,11 +9,7 @@ import { BallTriangle } from "react-loader-spinner";
 import { Toast } from "../components/Toaster";
 import { Container } from "../components/UI";
 
-export const AccountInfoHexViewer = ({
-  isDarkMode,
-}: {
-  isDarkMode: boolean;
-}) => {
+export const AccountInfoHexViewer = () => {
   const { accountPubkey } = useParams<{ accountPubkey: string }>();
   const { connection } = useSolana();
   const [accountInfo, setAccountInfo] = useState<AccountInfo<Buffer> | null>();
