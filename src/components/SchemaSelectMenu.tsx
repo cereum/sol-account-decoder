@@ -26,10 +26,6 @@ export function Dropdown({
       value: "anchor",
       label: "Anchor IDL",
     },
-    {
-      value: "schema",
-      label: "Schema",
-    },
   ];
 
   const onChange = (option: Option) => {

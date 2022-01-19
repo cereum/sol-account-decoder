@@ -8,7 +8,7 @@ import { SchemaSelector } from "../components/SchemaSelector";
 import { Toast } from "../components/Toaster";
 import { Container } from "../components/UI";
 
-export type SchemaType = "raw" | "anchor" | "schema";
+export type SchemaType = "raw" | "anchor";
 
 export const DecoderSelector = () => {
   const [publicKey, setPublicKey] = useState<"">();
