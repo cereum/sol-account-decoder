@@ -1,7 +1,6 @@
 import { Button } from "@blueprintjs/core";
 import { BN, Idl, Provider } from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor/dist/cjs/program";
-import { useSolana } from "@saberhq/use-solana";
 import { PublicKey } from "@solana/web3.js";
 import { useContext, useState } from "react";
 import { IDLInput } from "../components/IDLInput";
@@ -13,11 +12,12 @@ import { IDLSelectMenu, Option } from "../components/IDLSelectMenu";
 import { Toast } from "../components/Toaster";
 import { Container } from "../components/UI";
 import { ThemeContext } from "../themeContext";
+import { connectionContext } from "../contexts/connectionContext";
 
 export const DecodeAnchor = () => {
   const { accountPubkey } = useParams<{ accountPubkey: string }>();
   const [program, setProgram] = useState<Program>();
-  const { connection } = useSolana();
+  const { connection } = useContext(connectionContext);
   const [idl, setIDL] = useState<any>();
   const [options, setOptions] = useState<Option[]>([]);
   const [accountContents, setAccountContents] = useState<any>();

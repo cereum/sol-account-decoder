@@ -1,6 +1,5 @@
-import { useSolana } from "@saberhq/use-solana";
 import { AccountInfo, PublicKey } from "@solana/web3.js";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { AccountViewer } from "../components/AccountViewer";
 
@@ -8,10 +7,11 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { BallTriangle } from "react-loader-spinner";
 import { Toast } from "../components/Toaster";
 import { Container } from "../components/UI";
+import { connectionContext } from "../contexts/connectionContext";
 
 export const AccountInfoHexViewer = () => {
   const { accountPubkey } = useParams<{ accountPubkey: string }>();
-  const { connection } = useSolana();
+  const { connection } = useContext(connectionContext);
   const [accountInfo, setAccountInfo] = useState<AccountInfo<Buffer> | null>();
 
   const getAccountInfo = async () => {

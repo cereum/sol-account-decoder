@@ -1,9 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button, H2 } from "@blueprintjs/core";
 import styled from "styled-components";
-import { useSolana } from "@saberhq/use-solana";
-import { useWalletKit } from "@gokiprotocol/walletkit";
-import { useEffect } from "react";
+import { NetworkSelector } from "./NetworkSelector";
 
 type Props = {
   toggleAppTheme: () => void;
@@ -12,19 +10,13 @@ type Props = {
 export const NavBar = <NavBarProps extends Props & React.HTMLAttributes<any>>({
   toggleAppTheme,
 }: NavBarProps) => {
-  const { network } = useSolana();
-  const { connect } = useWalletKit();
-
-  useEffect(() => {
-    console.log(network);
-  }, [network]);
   return (
     <Header>
       <NavLink to="/">
         <H2 style={{ margin: 0 }}>Solana Account Decoder</H2>
       </NavLink>
       <div>
-        <Button text={network} onClick={connect} />
+        <NetworkSelector />
         <Button
           style={{ marginLeft: 2 }}
           onClick={toggleAppTheme}
