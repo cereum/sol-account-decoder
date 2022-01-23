@@ -1,5 +1,5 @@
 import { Button } from "@blueprintjs/core";
-import { BN, Idl } from "@project-serum/anchor";
+import { BN, Idl, Provider } from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor/dist/cjs/program";
 import { useSolana } from "@saberhq/use-solana";
 import { PublicKey } from "@solana/web3.js";
@@ -17,7 +17,7 @@ import { ThemeContext } from "../themeContext";
 export const DecodeAnchor = () => {
   const { accountPubkey } = useParams<{ accountPubkey: string }>();
   const [program, setProgram] = useState<Program>();
-  const { provider } = useSolana();
+  const { connection } = useSolana();
   const [idl, setIDL] = useState<any>();
   const [options, setOptions] = useState<Option[]>([]);
   const [accountContents, setAccountContents] = useState<any>();
@@ -31,7 +31,7 @@ export const DecodeAnchor = () => {
         new Program(
           idl! as Idl,
           new PublicKey(idl!.metadata.address ? idl!.metadata.address : 0),
-          provider
+          { connection } as Provider
         )
       );
     } catch (error) {
