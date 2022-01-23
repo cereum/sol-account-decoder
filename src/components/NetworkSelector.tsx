@@ -1,34 +1,82 @@
 import { Button, MenuItem } from "@blueprintjs/core";
 import { Select } from "@blueprintjs/select";
 import { Connection } from "@solana/web3.js";
-import { HTMLAttributes, useContext, useState } from "react";
-import { connectionContext } from "../contexts/connectionContext";
+import { HTMLAttributes, useContext, useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { connectionContext, Network } from "../contexts/connectionContext";
 
 export interface Option {
-  value: string;
-  label: string;
+  value: Network;
+  label: ConnectionLabel;
 }
 
-const Selector = Select.ofType<Option>();
-type Network = "Devnet" | "Mainnet Beta" | "Testnet";
+type ConnectionLabel = "Mainnet Beta" | "Devnet" | "Testnet";
+type NetworkEndpoint =
+  | "https://api.mainnet-beta.solana.com"
+  | "https://api.devnet.solana.com"
+  | "https://api.testnet.solana.com";
 
-const options = [
-  { label: "Mainnet Beta", value: "https://api.mainnet-beta.solana.com" },
-  { label: "Testnet", value: "https://api.testnet.solana.com" },
-  { label: "Devnet", value: "https://api.devnet.solana.com" },
+const Selector = Select.ofType<Option>();
+
+const options: Option[] = [
+  {
+    label: "Mainnet Beta",
+    value: "mainnet",
+  },
+  {
+    label: "Testnet",
+    value: "testnet",
+  },
+  {
+    label: "Devnet",
+    value: "devnet",
+  },
 ];
+const convertNetworkToLabel = (network: Network): ConnectionLabel => {
+  switch (network) {
+    case "devnet":
+      return "Devnet";
+    case "mainnet":
+      return "Mainnet Beta";
+    case "testnet":
+      return "Testnet";
+  }
+};
+
+const convertNetworkToEndpoint = (network: Network): NetworkEndpoint => {
+  switch (network) {
+    case "devnet":
+      return "https://api.devnet.solana.com";
+    case "mainnet":
+      return "https://api.mainnet-beta.solana.com";
+    case "testnet":
+      return "https://api.testnet.solana.com";
+  }
+};
 
 export function NetworkSelector({
   className,
   ...props
 }: HTMLAttributes<HTMLButtonElement>) {
-  const [currentNetwork, setCurrentNetwork] = useState<Network>("Mainnet Beta");
-  const { setConnection } = useContext(connectionContext);
+  const { setConnection, setNetwork, network } = useContext(connectionContext);
+  const [connectionLabel, setConnectionLabel] = useState<ConnectionLabel>(
+    convertNetworkToLabel(network)
+  );
+  const [activeNetwork, setActiveNetwork] = useState<Network>(network);
 
   const onChange = (option: Option) => {
-    setCurrentNetwork(option.label as Network);
-    setConnection(new Connection(option.value));
+    setConnection(new Connection(convertNetworkToEndpoint(option.value)));
+    setConnectionLabel(option.label);
+    setNetwork(option.value);
+    setActiveNetwork(network);
   };
+
+  console.log(`activeNetwork: ${activeNetwork}`);
+  if (activeNetwork !== network) {
+    setConnection(new Connection(convertNetworkToEndpoint(network)));
+    setConnectionLabel(convertNetworkToLabel(network));
+    setActiveNetwork(network);
+  }
 
   return (
     <Selector
@@ -48,7 +96,7 @@ export function NetworkSelector({
       noResults={<MenuItem disabled={true} text="No results." />}
       onItemSelect={onChange}
     >
-      <Button text={currentNetwork} rightIcon="double-caret-vertical" />
+      <Button text={connectionLabel} rightIcon="double-caret-vertical" />
     </Selector>
   );
 }

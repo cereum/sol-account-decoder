@@ -7,12 +7,26 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { BallTriangle } from "react-loader-spinner";
 import { Toast } from "../components/Toaster";
 import { Container } from "../components/UI";
-import { connectionContext } from "../contexts/connectionContext";
+import { connectionContext, Network } from "../contexts/connectionContext";
 
 export const AccountInfoHexViewer = () => {
-  const { accountPubkey } = useParams<{ accountPubkey: string }>();
-  const { connection } = useContext(connectionContext);
+  const { accountPubkey, network } =
+    useParams<{ accountPubkey: string; network: string }>();
+  const {
+    connection,
+    setNetwork,
+    network: activeNetwork,
+  } = useContext(connectionContext);
+
   const [accountInfo, setAccountInfo] = useState<AccountInfo<Buffer> | null>();
+  if (activeNetwork !== (network! as Network)) {
+    setNetwork(network);
+  } else {
+    console.log(network);
+  }
+
+  console.log(activeNetwork);
+  console.log(activeNetwork !== (network! as Network));
 
   const getAccountInfo = async () => {
     try {

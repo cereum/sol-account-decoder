@@ -15,7 +15,8 @@ import { ThemeContext } from "../themeContext";
 import { connectionContext } from "../contexts/connectionContext";
 
 export const DecodeAnchor = () => {
-  const { accountPubkey } = useParams<{ accountPubkey: string }>();
+  const { accountPubkey, network } =
+    useParams<{ accountPubkey: string; network: string }>();
   const [program, setProgram] = useState<Program>();
   const { connection } = useContext(connectionContext);
   const [idl, setIDL] = useState<any>();
@@ -24,7 +25,7 @@ export const DecodeAnchor = () => {
   const [isLoading, setLoading] = useState(false);
 
   const isDark = useContext(ThemeContext);
-
+  console.log(network);
   const handleSubmit = () => {
     try {
       setProgram(
