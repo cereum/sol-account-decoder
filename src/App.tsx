@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import { NavBar } from "./components/NavBar";
+import { Footer } from "./components/Footer";
+
 import { AccountInfoHexViewer } from "./pages";
 import { DecodeAnchor } from "./pages/DecodeAnchor";
 import { DecoderSelector } from "./pages";
@@ -34,6 +36,7 @@ function App() {
             />
             <Route path="/anchor/:accountPubkey" element={<DecodeAnchor />} />
           </Routes>
+          <Footer />
         </ThemeContext.Provider>
       </Router>
     </div>
