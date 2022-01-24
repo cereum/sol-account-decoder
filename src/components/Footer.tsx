@@ -26,7 +26,6 @@ const NavLink = styled.div`
 
 const FooterStyle = styled.footer`
   height: 45px;
-  position: absolute;
   bottom: 0;
   width: 100%;
 `;
