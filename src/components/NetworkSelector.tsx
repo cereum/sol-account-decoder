@@ -1,8 +1,7 @@
 import { Button, MenuItem } from "@blueprintjs/core";
 import { Select } from "@blueprintjs/select";
-import { Connection } from "@solana/web3.js";
-import { HTMLAttributes, useContext, useState } from "react";
-import { connectionContext, Network } from "../contexts/connectionContext";
+import { HTMLAttributes, useEffect, useState } from "react";
+import { Network, useConnection } from "../contexts/ConnectionContext";
 
 export interface Option {
   value: Network;
@@ -10,7 +9,7 @@ export interface Option {
 }
 
 type ConnectionLabel = "Mainnet Beta" | "Devnet" | "Testnet";
-type NetworkEndpoint =
+export type NetworkEndpoint =
   | "https://api.mainnet-beta.solana.com"
   | "https://api.devnet.solana.com"
   | "https://api.testnet.solana.com";
@@ -42,41 +41,24 @@ const convertNetworkToLabel = (network: Network): ConnectionLabel => {
   }
 };
 
-const convertNetworkToEndpoint = (network: Network): NetworkEndpoint => {
-  switch (network) {
-    case "devnet":
-      return "https://api.devnet.solana.com";
-    case "mainnet":
-      return "https://api.mainnet-beta.solana.com";
-    case "testnet":
-      return "https://api.testnet.solana.com";
-  }
-};
-
 export function NetworkSelector({
   className,
   ...props
 }: HTMLAttributes<HTMLButtonElement>) {
-  const { setConnection, setNetwork, network } = useContext(connectionContext);
+  const { setNetwork, network } = useConnection();
   const [connectionLabel, setConnectionLabel] = useState<ConnectionLabel>(
-    convertNetworkToLabel(network)
+    convertNetworkToLabel(network || "mainnet")
   );
-  const [activeNetwork, setActiveNetwork] = useState<Network>(network);
 
   const onChange = (option: Option) => {
-    setConnection(new Connection(convertNetworkToEndpoint(option.value)));
-    setConnectionLabel(option.label);
     setNetwork(option.value);
-    setActiveNetwork(network);
   };
+  
+  useEffect(() => {
+    setConnectionLabel(convertNetworkToLabel(network || "mainnet"));
+  }, [network]);
 
-  console.log(`activeNetwork: ${activeNetwork}`);
-  if (activeNetwork !== network) {
-    setConnection(new Connection(convertNetworkToEndpoint(network)));
-    setConnectionLabel(convertNetworkToLabel(network));
-    setActiveNetwork(network);
-  }
-
+  console.log("selector");
   return (
     <Selector
       items={options}

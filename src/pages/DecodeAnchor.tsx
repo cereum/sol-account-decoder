@@ -12,13 +12,13 @@ import { IDLSelectMenu, Option } from "../components/IDLSelectMenu";
 import { Toast } from "../components/Toaster";
 import { Container } from "../components/UI";
 import { ThemeContext } from "../contexts/themeContext";
-import { connectionContext } from "../contexts/connectionContext";
+import { useConnection } from "../contexts/ConnectionContext";
 
 export const DecodeAnchor = () => {
   const { accountPubkey, network } =
     useParams<{ accountPubkey: string; network: string }>();
   const [program, setProgram] = useState<Program>();
-  const { connection } = useContext(connectionContext);
+  const { connection } = useConnection();
   const [idl, setIDL] = useState<any>();
   const [options, setOptions] = useState<Option[]>([]);
   const [accountContents, setAccountContents] = useState<any>();

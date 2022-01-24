@@ -7,15 +7,10 @@ import { AccountInfoHexViewer } from "./pages";
 import { DecodeAnchor } from "./pages/DecodeAnchor";
 import { DecoderSelector } from "./pages";
 import { ThemeContext } from "./contexts/themeContext";
-import { connectionContext, Network } from "./contexts/connectionContext";
-import { Connection } from "@solana/web3.js";
+import { ConnectionProvider } from "./contexts/ConnectionContext";
 
 function App() {
   const [isDark, setTheme] = useState(true);
-  const [connection, setConnection] = useState<Connection>(
-    new Connection("https://api.mainnet-beta.solana.com")
-  );
-  const [network, setNetwork] = useState<Network>("mainnet");
 
   const toggleAppTheme = () => {
     setTheme(!isDark);
@@ -30,14 +25,7 @@ function App() {
   };
 
   return (
-    <connectionContext.Provider
-      value={{
-        connection,
-        setConnection,
-        network,
-        setNetwork,
-      }}
-    >
+    <ConnectionProvider>
       <div className={isDark ? "bp3-dark" : ""}>
         <Router>
           <ThemeContext.Provider value={isDark}>
@@ -52,12 +40,20 @@ function App() {
                 path="/anchor/:network/:accountPubkey/"
                 element={<DecodeAnchor />}
               />
+              <Route
+                path="/raw/:accountPubkey/"
+                element={<AccountInfoHexViewer />}
+              />
+              <Route
+                path="/anchor/:accountPubkey/"
+                element={<DecodeAnchor />}
+              />
             </Routes>
             <Footer />
           </ThemeContext.Provider>
         </Router>
       </div>
-    </connectionContext.Provider>
+    </ConnectionProvider>
   );
 }
 
