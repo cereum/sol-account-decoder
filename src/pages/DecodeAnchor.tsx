@@ -11,7 +11,7 @@ import { BallTriangle } from "react-loader-spinner";
 import { IDLSelectMenu, Option } from "../components/IDLSelectMenu";
 import { Toast } from "../components/Toaster";
 import { Container } from "../components/UI";
-import { ThemeContext } from "../themeContext";
+import { ThemeContext } from "../contexts/themeContext";
 import { connectionContext } from "../contexts/connectionContext";
 
 export const DecodeAnchor = () => {

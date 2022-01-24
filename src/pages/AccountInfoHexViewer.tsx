@@ -1,5 +1,5 @@
 import { AccountInfo, PublicKey } from "@solana/web3.js";
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { AccountViewer } from "../components/AccountViewer";
 
@@ -19,16 +19,14 @@ export const AccountInfoHexViewer = () => {
   } = useContext(connectionContext);
 
   const [accountInfo, setAccountInfo] = useState<AccountInfo<Buffer> | null>();
-  if (activeNetwork !== (network! as Network)) {
+  useMemo(() => {
     setNetwork(network);
-  } else {
-    console.log(network);
-  }
+  }, [network, setNetwork]);
 
   console.log(activeNetwork);
   console.log(activeNetwork !== (network! as Network));
 
-  const getAccountInfo = async () => {
+  useMemo(async () => {
     try {
       const accountInfo = await connection.getAccountInfo(
         new PublicKey(accountPubkey!)
@@ -37,13 +35,7 @@ export const AccountInfoHexViewer = () => {
     } catch (error) {
       Toast.show({ intent: "danger", message: (error as any).toString() });
     }
-  };
-
-  useEffect(() => {
-    if (accountPubkey) {
-      getAccountInfo();
-    }
-  });
+  }, [accountPubkey, connection]);
 
   if (accountInfo) {
     return (

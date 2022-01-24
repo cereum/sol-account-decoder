@@ -6,7 +6,7 @@ import { Footer } from "./components/Footer";
 import { AccountInfoHexViewer } from "./pages";
 import { DecodeAnchor } from "./pages/DecodeAnchor";
 import { DecoderSelector } from "./pages";
-import { ThemeContext } from "./themeContext";
+import { ThemeContext } from "./contexts/themeContext";
 import { connectionContext, Network } from "./contexts/connectionContext";
 import { Connection } from "@solana/web3.js";
 
@@ -31,7 +31,12 @@ function App() {
 
   return (
     <connectionContext.Provider
-      value={{ connection, setConnection, network, setNetwork }}
+      value={{
+        connection,
+        setConnection,
+        network,
+        setNetwork,
+      }}
     >
       <div className={isDark ? "bp3-dark" : ""}>
         <Router>

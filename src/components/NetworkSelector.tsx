@@ -1,8 +1,7 @@
 import { Button, MenuItem } from "@blueprintjs/core";
 import { Select } from "@blueprintjs/select";
 import { Connection } from "@solana/web3.js";
-import { HTMLAttributes, useContext, useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { HTMLAttributes, useContext, useState } from "react";
 import { connectionContext, Network } from "../contexts/connectionContext";
 
 export interface Option {
