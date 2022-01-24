@@ -1,7 +1,7 @@
 import "../style/hex-viewer.scss";
 import { HexViewer } from "../hexviewer";
 import { AccountInfo } from "@solana/web3.js";
-import { ThemeContext } from "../themeContext";
+import { ThemeContext } from "../contexts/themeContext";
 import { useContext } from "react";
 export const AccountViewer = ({
   accountInfo,

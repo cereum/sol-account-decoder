@@ -2,37 +2,64 @@ import { Button } from "@blueprintjs/core";
 import { BN, Idl, Provider } from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor/dist/cjs/program";
 import { PublicKey } from "@solana/web3.js";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { IDLInput } from "../components/IDLInput";
 import camelcase from "camelcase";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ReactJson from "react-json-view";
 import { BallTriangle } from "react-loader-spinner";
 import { IDLSelectMenu, Option } from "../components/IDLSelectMenu";
 import { Toast } from "../components/Toaster";
 import { Container } from "../components/UI";
-import { ThemeContext } from "../themeContext";
-import { connectionContext } from "../contexts/connectionContext";
+import { ThemeContext } from "../contexts/themeContext";
+import { Network, useConnection } from "../contexts/ConnectionContext";
 
 export const DecodeAnchor = () => {
-  const { accountPubkey } = useParams<{ accountPubkey: string }>();
+  const { accountPubkey, network: urlNetwork } =
+    useParams<{ accountPubkey: string; network: Network }>();
   const [program, setProgram] = useState<Program>();
-  const { connection } = useContext(connectionContext);
+  const { connection, network, setNetwork } = useConnection();
   const [idl, setIDL] = useState<any>();
   const [options, setOptions] = useState<Option[]>([]);
-  const [accountContents, setAccountContents] = useState<any>();
+  const [accountContents, setAccountContents] = useState<Object>();
   const [isLoading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const isDark = useContext(ThemeContext);
+  console.log(network);
 
-  const handleSubmit = () => {
-    try {
+  useEffect(() => {
+    if (urlNetwork && urlNetwork !== network && !network) {
+      setNetwork(urlNetwork);
+      navigate(`/anchor/${urlNetwork}/${accountPubkey}`);
+    }
+  }, [network, accountPubkey, navigate, setNetwork, urlNetwork]);
+
+  useEffect(() => {
+    if (urlNetwork !== network && network) {
+      setNetwork(network);
+      navigate(`/anchor/${network}/${accountPubkey}`);
+    }
+  }, [network, accountPubkey, navigate, setNetwork, urlNetwork]);
+
+  useEffect(() => {
+    if (urlNetwork !== network && network) {
       setProgram(
         new Program(
           idl! as Idl,
           new PublicKey(idl!.metadata.address ? idl!.metadata.address : 0),
           { connection } as Provider
         )
+      );
+    }
+  }, [idl, connection, network, urlNetwork]);
+
+  const handleSubmit = () => {
+    try {
+      setProgram(
+        new Program(idl! as Idl, new PublicKey(idl!.metadata.address || 0), {
+          connection,
+        } as Provider)
       );
     } catch (error) {
       Toast.show({
@@ -42,7 +69,7 @@ export const DecodeAnchor = () => {
     }
   };
 
-  const validateIDL = (file: File) => {
+  const handleIDLFile = (file: File) => {
     try {
       const idlJSON = JSON.parse(file.toString());
       setIDL(idlJSON);
@@ -80,7 +107,7 @@ export const DecodeAnchor = () => {
   const onDropDownChange = async (value: string) => {
     try {
       setLoading(true);
-
+      setAccountContents(undefined);
       const objectEntries = Object.entries(
         await program!.account[camelcase(value)].fetch(
           new PublicKey(accountPubkey!)
@@ -116,7 +143,7 @@ export const DecodeAnchor = () => {
   return !program ? (
     <div>
       <div>
-        <IDLInput setFile={validateIDL} />
+        <IDLInput setFile={handleIDLFile} />
         <Button onClick={handleSubmit}>Submit</Button>
       </div>
     </div>

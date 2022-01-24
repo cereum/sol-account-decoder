@@ -1,6 +1,6 @@
 import React, { FC, useContext } from "react";
 import { Row } from "./row";
-import { ThemeContext } from "../../themeContext";
+import { ThemeContext } from "../../contexts/themeContext";
 export const Hex: FC<{ rows: number[][][]; bytesper: number }> = (props) => {
   const { rows, bytesper } = props;
   const pad = "000000";
