@@ -23,7 +23,7 @@ export const DecodeAnchor = () => {
   const [options, setOptions] = useState<Option[]>([]);
   const [accountContents, setAccountContents] = useState<Object>();
   const [isLoading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  let navigate = useNavigate();
 
   const isDark = useContext(ThemeContext);
   console.log(network);
@@ -31,6 +31,7 @@ export const DecodeAnchor = () => {
   useEffect(() => {
     if (urlNetwork && urlNetwork !== network && !network) {
       setNetwork(urlNetwork);
+      setProgram(undefined);
       navigate(`/anchor/${urlNetwork}/${accountPubkey}`);
     }
   }, [network, accountPubkey, navigate, setNetwork, urlNetwork]);
@@ -38,12 +39,15 @@ export const DecodeAnchor = () => {
   useEffect(() => {
     if (urlNetwork !== network && network) {
       setNetwork(network);
+      setProgram(undefined);
       navigate(`/anchor/${network}/${accountPubkey}`);
     }
   }, [network, accountPubkey, navigate, setNetwork, urlNetwork]);
 
   useEffect(() => {
     if (urlNetwork !== network && network) {
+      setAccountContents(undefined);
+      setLoading(false);
       setProgram(
         new Program(
           idl! as Idl,
@@ -142,10 +146,8 @@ export const DecodeAnchor = () => {
 
   return !program ? (
     <div>
-      <div>
-        <IDLInput setFile={handleIDLFile} />
-        <Button onClick={handleSubmit}>Submit</Button>
-      </div>
+      <IDLInput setFile={handleIDLFile} />
+      <Button onClick={handleSubmit}>Submit</Button>
     </div>
   ) : (
     <Container>
