@@ -1,6 +1,6 @@
-# Solana Account Decoding Tool
+# Solana Account Decoder
 
-## Web Front End:
+## To Build from Source:
 
 1. Install deps
    `yarn`
