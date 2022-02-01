@@ -1,6 +1,6 @@
 import { Button, MenuItem } from "@blueprintjs/core";
 import { Select } from "@blueprintjs/select";
-import { HTMLAttributes } from "react";
+import { HTMLAttributes, useState } from "react";
 
 export interface Option {
   value: string;
@@ -21,8 +21,10 @@ export function IDLSelectMenu({
   selectOption: Function;
 }) {
   const onChange = (option: Option) => {
+    setButtonText(option.label);
     selectOption(option.value);
   };
+  const [buttonText, setButtonText] = useState<string>("Select Account");
 
   return (
     <SchemaSelect
@@ -44,7 +46,7 @@ export function IDLSelectMenu({
     >
       <Button
         style={{ marginTop: 18 }}
-        text="Select Account"
+        text={buttonText}
         rightIcon="double-caret-vertical"
       />
     </SchemaSelect>
