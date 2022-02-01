@@ -26,7 +26,6 @@ export const DecodeAnchor = () => {
   let navigate = useNavigate();
 
   const isDark = useContext(ThemeContext);
-  console.log(network);
 
   useEffect(() => {
     if (urlNetwork && urlNetwork !== network && !network) {
@@ -92,18 +91,17 @@ export const DecodeAnchor = () => {
 
   function decodeObject(object: any) {
     const decodedObject: { [key: string]: any } = {};
-    if (
-      object instanceof Object &&
-      !(object instanceof PublicKey) &&
-      !(object instanceof BN) &&
-      !(typeof object === "string") &&
-      !(typeof object === "number")
-    ) {
+
+    if (object === null) return;
+
+    if (object.hasOwnProperty("words") && object.hasOwnProperty("negative")) {
+      return object.toString();
+    } else if (object instanceof Object && !(object instanceof PublicKey)) {
       for (const [key, value] of Object.entries(object)) {
         decodedObject[key] = decodeObject(value);
       }
       return decodedObject;
-    } else if (object !== null) {
+    } else {
       return object.toString();
     }
   }
