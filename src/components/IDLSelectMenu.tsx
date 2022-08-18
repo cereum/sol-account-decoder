@@ -45,7 +45,7 @@ export function IDLSelectMenu({
       onItemSelect={onChange}
     >
       <Button
-        style={{ marginTop: 18 }}
+        style={{}}
         text={buttonText}
         rightIcon="double-caret-vertical"
       />
