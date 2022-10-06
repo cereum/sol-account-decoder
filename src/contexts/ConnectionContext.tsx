@@ -13,14 +13,13 @@ const ConnectionContext = createContext<
 >(undefined);
 
 function ConnectionProvider({ children }: ConnectionProviderProps) {
-  const [network, setNetworkState] = useState<Network>();
+  const [network, setNetworkState] = useState<Network>('mainnet');
+  const [connection, setConnection] = useState<Connection>(new Connection(convertNetworkToEndpoint('mainnet')));
 
-  const [connection, setConnection] = useState<Connection>();
-
-  console.log("context");
   const setNetwork = (targetNetwork: Network) => {
     if (targetNetwork !== network) {
       setNetworkState(targetNetwork);
+      console.log(convertNetworkToEndpoint(targetNetwork));
       setConnection(new Connection(convertNetworkToEndpoint(targetNetwork)));
     }
   };
