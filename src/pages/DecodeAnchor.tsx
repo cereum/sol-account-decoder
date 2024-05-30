@@ -1,5 +1,5 @@
 import { Button } from "@blueprintjs/core";
-import { BN, Idl, Provider } from "@project-serum/anchor";
+import { BN, BorshAccountsCoder, Idl, Provider } from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor/dist/cjs/program";
 import { PublicKey } from "@solana/web3.js";
 import { useContext, useEffect, useState } from "react";
@@ -13,6 +13,22 @@ import { Toast } from "../components/Toaster";
 import { Container } from "../components/UI";
 import { ThemeContext } from "../contexts/themeContext";
 import { Network, useConnection } from "../contexts/ConnectionContext";
+import { IdlTypeDef } from "@project-serum/anchor/dist/cjs/idl";
+import { DecodeStrategy, DecodeStrategySelectMenu } from '../components/DecodeStrategySelectMenu';
+
+
+function decodeAccount(coder: BorshAccountsCoder, type: IdlTypeDef, data: Buffer, strategy: DecodeStrategy): Object {
+  const discriminator = BorshAccountsCoder.accountDiscriminator(type.name);
+  switch (strategy) {
+    case 'Anchor':
+      return coder.decode(type.name, data);
+    case 'AddDiscriminator':
+      return coder.decode(type.name, Buffer.concat([discriminator, data]));;
+    case 'ReplaceDiscriminator':
+      // Untested
+      return coder.decode(type.name, Buffer.concat([discriminator, data.slice(8,)]));;
+  }
+}
 
 export const DecodeAnchor = () => {
   const { accountPubkey, network: urlNetwork } =
@@ -23,6 +39,10 @@ export const DecodeAnchor = () => {
   const [options, setOptions] = useState<Option[]>([]);
   const [accountContents, setAccountContents] = useState<Object>();
   const [isLoading, setLoading] = useState(false);
+
+  const [decodeStrategy, setDecodeStrategy] = useState<DecodeStrategy>('Anchor');
+  const [idlAccountType, setIdlAccountType] = useState<IdlTypeDef | null>(null);
+
   let navigate = useNavigate();
 
   const isDark = useContext(ThemeContext);
@@ -107,13 +127,29 @@ export const DecodeAnchor = () => {
   }
 
   const onDropDownChange = async (value: string) => {
+    const typedIdl: Idl = idl as Idl;
+    const type: IdlTypeDef = typedIdl.accounts!.filter((def) => def.name.toLowerCase() === value.toLocaleLowerCase())![0];
+    setIdlAccountType(type);
+  }
+
+  const onButtonClick = async () => {
     try {
       setLoading(true);
       setAccountContents(undefined);
+
+      if (!idlAccountType) {
+        throw Error("No account type selected");
+      }
+
+      const accountDetails = await connection?.getAccountInfo(new PublicKey(accountPubkey!));
+      if (!accountDetails) {
+        throw Error("Account not found");
+      }
+      console.log(`Decoding: ${idlAccountType} with ${decodeStrategy}`);
+      const decoded = decodeAccount(new BorshAccountsCoder(idl as Idl), idlAccountType, accountDetails.data, decodeStrategy);
+
       const objectEntries = Object.entries(
-        await program!.account[camelcase(value)].fetch(
-          new PublicKey(accountPubkey!)
-        )
+        decoded,
       ).map((x: any) => {
         const [key, value] = x;
 
@@ -134,6 +170,7 @@ export const DecodeAnchor = () => {
       }
       setAccountContents(object);
     } catch (error) {
+      console.log(error);
       setLoading(false);
       Toast.show({
         intent: "danger",
@@ -142,29 +179,45 @@ export const DecodeAnchor = () => {
     }
   };
 
+  const onDecodeStrategyChange = async (newDecodeStrategy: DecodeStrategy) => {
+    setDecodeStrategy(newDecodeStrategy);
+  }
+
   return !program ? (
     <div>
       <IDLInput setFile={handleIDLFile} />
       <Button onClick={handleSubmit}>Submit</Button>
     </div>
   ) : (
-    <Container>
-      <IDLSelectMenu selectOption={onDropDownChange} options={options} />
-      {accountContents ? (
-        <ReactJson
-          collapsed
-          src={accountContents}
-          style={{
-            textAlign: "left",
-            marginTop: 12,
-            paddingRight: 24,
-            background: isDark ? "rgb(25, 25, 25)" : "#e8dcb2",
-          }}
-          theme={isDark ? "twilight" : "rjv-default"}
-        />
-      ) : isLoading ? (
-        <BallTriangle color="#ffba01" height={100} width={100} />
-      ) : null}
-    </Container>
+    <div>
+      <div className="mx-auto flex flex-row center place-items-center px-5 place-content-center">
+        <div className="">
+          <DecodeStrategySelectMenu selectOption={onDecodeStrategyChange} />
+        </div>
+        <div className="my-auto place-items-center px-5">
+          <IDLSelectMenu selectOption={onDropDownChange} options={options} />
+        </div>
+        <div>
+          <Button onClick={onButtonClick}>Decode</Button>
+        </div>
+      </div>
+      <Container>
+        {accountContents ? (
+          <ReactJson
+            collapsed
+            src={accountContents}
+            style={{
+              textAlign: "left",
+              marginTop: 12,
+              paddingRight: 24,
+              background: isDark ? "rgb(25, 25, 25)" : "#e8dcb2",
+            }}
+            theme={isDark ? "twilight" : "rjv-default"}
+          />
+        ) : isLoading ? (
+          <BallTriangle color="#ffba01" height={100} width={100} />
+        ) : null}
+      </Container>
+    </div>
   );
 };
